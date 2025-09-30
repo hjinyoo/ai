@@ -26,4 +26,4 @@ with open('filepath', 'r|w|a', encoding) as f:
 		함수명:딕셔너리객체로 return
 	json.dump(리스트변수, f, ensure_ascii, indent)
 	json.dump(객체리스트, f, default=클래스명.함수명
-		함수명
+		함수명:객체를 딕셔너리로 return
