@@ -1,0 +1,58 @@
+데이터프레임과 시리즈(pandas)
+-pip install pandas
+
+판다스 패키지
+-데이터 분석을 위해 반드시 알아야 할 패키지. 넘파이를 기반으로 하며, 다른 많은 라이브러리와 잘 통합되도록 설계
+-2차원 구조를 갖는 데이터프레임, 1차원 구조를 갖는 시리즈를 제공
+
+판다스 장점 : 데이터프레임생성, 파일io, 레이블링, 부분데이터 추출, 크기변경(행이나 열 삽입, 삭제), 데이터 분할, 병합, 데이터구조변경, 결측치 처리
+
+데이터프레임 만들기
+-딕셔너리 리스트를 이용해서 데이터프레임 만들기
+d = [{'col1':..., 'col':...}, {'col1':..., 'col2':...}]
+df = pd.DataFrame(data=d)
+df
+-리스트를 이용해서 데이터프레임 만들기
+col1 = [...]
+col2 = [...]
+df = pd.DataFrame({'col1':col1, 'col2':col2})
+df
+판다스 디스플레이 옵션
+pd.options.display.max_columns = 지정값 # 기본값 20, 임의로 지정 가능
+pd.options.display.max_rows = 지정값    #  기본값 60, 임의로 지정가능
+
+read_csv
+-csv 파일 불러오기(기본값)
+ex)
+a= pd.read_csv('data/파일명.csv',
+                     #, encoding='utf-8', sep=',', comment주석처리x
+                    )
+
+형변환 : astype('int64'), astype('datetime64' )
+문자형로 읽어들인 Birth를 datetime형으로
+ex)
+int64에서 int16으로 변환
+a['Age'] = a['Age'].astype(np.int16)
+문자형로 읽어들인 Birth를 datetime형으로 변환
+a['Birth'] = pd.to_datetime(member['Birth']) 
+
+-특정행을 제외하고 csv 파일 읽어오기
+skiprows 사용
+ex)
+a= pd.read_csv('data/파일명.csv',
+                     encoding='cp949',
+                     skiprows=[n,m]) # n,m번째 행 제외하고 읽어오기(시작은 1부터)
+a
+
+-상위몇행만 sep문자는 ,아닌 csv파일 읽어오기
+a = pd.read_csv('data/파일명.csv', 
+                     nrows=n, # 상위 n행만
+                     sep=' ') #('|,/ 등) 
+a
+-주석(#)제외, datetime형 필드를 지정하여 csv 파일 읽어오기
+ex)
+a = pd.read_csv('data/파일명..csv',
+                     sep='\t',              # 구분자 설정
+                     comment='#',           # 주석제외
+                     parse_dates=['Birth']) # datetime64형으로 읽어올 필드지정
+a
