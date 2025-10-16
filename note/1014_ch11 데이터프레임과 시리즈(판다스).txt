@@ -22,7 +22,7 @@ pd.options.display.max_columns = 지정값 # 기본값 20, 임의로 지정 가�
 pd.options.display.max_rows = 지정값    #  기본값 60, 임의로 지정가능
 
 read_csv
--csv 파일 불러오기(기본값)
+1.csv 파일 불러오기(기본값)
 ex)
 a= pd.read_csv('data/파일명.csv',
                      #, encoding='utf-8', sep=',', comment주석처리x
@@ -36,7 +36,7 @@ a['Age'] = a['Age'].astype(np.int16)
 문자형로 읽어들인 Birth를 datetime형으로 변환
 a['Birth'] = pd.to_datetime(member['Birth']) 
 
--특정행을 제외하고 csv 파일 읽어오기
+2.특정행을 제외하고 csv 파일 읽어오기
 skiprows 사용
 ex)
 a= pd.read_csv('data/파일명.csv',
@@ -44,15 +44,85 @@ a= pd.read_csv('data/파일명.csv',
                      skiprows=[n,m]) # n,m번째 행 제외하고 읽어오기(시작은 1부터)
 a
 
--상위몇행만 sep문자는 ,아닌 csv파일 읽어오기
-a = pd.read_csv('data/파일명.csv', 
-                     nrows=n, # 상위 n행만
-                     sep=' ') #('|,/ 등) 
+3. 상위몇행만 sep문자는 ,아닌 csv파일 읽어오기
+ex)
+a = pd.read_csv('data/ch11_membersep.csv', 
+                     nrows=5, # 상위 5행만
+                     sep='|')
 a
--주석(#)제외, datetime형 필드를 지정하여 csv 파일 읽어오기
+
+4.주석(#)제외, datetime형 필드를 지정하여 csv 파일 읽어오기
 ex)
 a = pd.read_csv('data/파일명..csv',
                      sep='\t',              # 구분자 설정
                      comment='#',           # 주석제외
-                     parse_dates=['Birth']) # datetime64형으로 읽어올 필드지정
+                     parse_dates=['datetime열이름']) # datetime64형으로 읽어올 필드지정
 a
+
+
+패키지에서  iris 데이터 가져오기
+iris 가져오기 방법1 : sklearn(머신러닝 패키지)
+iris 가져오기 방법2 : statsmodels (R데이터)
+iris 가져오기 방법3 : seaborn(시각화패키지)
+
+iris 방법1 : sklearn
+sklearn.datasets 모듈 데이터(iris)를 데이터 프레임으로 변환
+from sklearn import datasets #머신러닝을 공부하기 위한 학습 데이터셋 제공
+# sklearn 패키지에서 제공되는 데이터셋은 딕셔너리형식으로 제공
+iris = datasets.load_iris()
+print(type(iris)) # Bunch타입(딕셔너리를 상속받은 타입) 딕셔너리처럼 동작
+# print(iris.DESCR) # iris 데이터셋의 설명
+# 독립변수
+data = iris.data
+# 종속변수
+target = iris.target_names[iris.target]
+
+iris 방법2 : statsmodels
+from statsmodels.api import datasets
+iris_dataset = datasets.get_rdataset('iris',
+                                     package='datasets',
+                                     cache=True) # 한번 다운로드한 데이터를 pc에 저장
+# 열이름에 .이 있으면 접근불가
+ 
+iris 방법3 : seaborn
+
+import seaborn as sns
+iris = sns.load_dataset('iris')
+iris.head(1)
+-데이터프레임을 파일로 출력(4k)
+
+
+이름(열, 행) 지정하기
+
+열이름 지정하기
+변수명.columns=['열이름1','열이름2',...]
+
+행이름 지정
+변수명.index = ['행이름1','행이름2',...]
+
+-인덱스를 컬럼으로 편입시키기
+변수명.reset_index(inplace=True)
+
+-기존 index를 새로운 열에 편입시키지 않고 제거한 후, 새로운 숫자 index로 초기화
+변수명 = 변수명.reset_index(drop=True)
+
+datetime열에서 날짜 및 시간에 관련된 정보를 추출 : 시리즈.dt
+ex)
+변수명['datetime열이름'].dt.year
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
