@@ -1,0 +1,137 @@
+데이터프레임과 시리즈(pandas)
+데이터그룹화 및 집계
+groupby cf. pivot_table 
+그룹화방법1
+df.groupby(by=[그룹핑할 열])[[함수적용해서 출력할열들]].기초통계함수()
+[[함수적용해서 출력할열들]] 생략시 모든열에 적용 됨
+
+그룹화 방법1-1 : 그룹핑 할 때 index를 컬럼으로 편입
+df.groupby(by=[그룹핑할 열])[[함수적용해서 출력할열들]].기초통계함수()
+[[함수적용해서 출력할열들]] 생략시 모든열에 적용 됨
+ex) iris.groupby('Species',as_index=False).sum()
+
+그룹화방법2 
+df.pivot_table(index='그룹화할 열',values=[함수적용해서출력할열들],aggfunc='기초통계함수')
+
+다중열 그룹화
+ex)
+iris를 다중열로 그룹화하기 위해 데이터 추가(num필드)
+0-25개, 1-25개, 2-25개, 3-25개, 4-25개, 5-25개
+import numpy as np
+np.array([[i]*25 for i in range(6)]).ravel()
+iris['num'] = np.array([[i]*25 for i in range(6)]).ravel()
+iris.iloc[::10]
+
+그룹간 데이터 처리
+ex)
+iris_grouped =iris.groupby('Species')
+for speciesname, group in iris_grouped:
+    print(speciesname) # species별로 그룹화
+    display(group)
+
+데이터프레임 그룹 인덱싱
+변수명.groupby('그룹화할 열').take([출력할 인덱스넘버들])
+
+
+데이터 구조 변경
+와이드포맷 <-> 롱포맷
+판다스 공식 문서의 melt : https://pandas.pydata.org/docs/user_guide/reshaping.html#melt-and-wide-to-long
+Tidy Data : https://vita.had.co.nz/papers/tidy-data.pdf
+
+melt를 이용한 언피벗팅(와이드포맷 -> 롱포맷)
+변수명_melted = 변수명.melt(id_vars=['식별할 열이름'], # 각 행을 식별
+                                    var_name='새로 생성될 열의 이름 ', 
+                                    value_name='새로 생성될 열의 값들의 열이름').sort_values(by=['식별할 열이름']) 
+변수명_melted.reset_index(drop=True, inplace=True) #인덱스 새로, 할당
+
+pivot_table을 이용한 피벗팅(롱포맷 -> 와이드포맷)
+새로운 변수명 = 변수명_melted.pivot_table(index=['식별할 열이름'], 
+                                              columns='새로 생성될 열의 이름',
+                                              values='새로 생성될 열의 값들의 열이름')
+새로운 변수명.reset_index(inplace=True)
+
+새로운 변수명.columns.name =None # 칼럼들 분리하여 와이드로
+
+
+
+데이터프레임에 함수 적용 시키기
+apply(func, axis) : 데이터프레임이나 시리즈 모두 적용 가능(1차원)
+apply(func) : 각 요소별로 적용(데이터프레임에서만 가능)(2차원)
+map(func) : 각 요소별로 적용(1차원 시리즈에서만 가능)
+applymap : 데이터프레임 객체에서만 가능
+
+
+
+
+일괄 변경하기(결측치나 특정값)
+-fillna(결측치를 어떤 값으로 변경)
+대부분의 결측치에 사용하고 중위수, 평균값, 최빈값, 이전값, 다음값으로 대체   
+ex)
+모든 결측치를 0으로 대체
+df.fillna(0)
+결측치를 이전행의 값으로 대체
+df.fillna(method='ffill')
+결측치를 다음행의 값으로 대체
+df.fillna(method='bfill')  
+결측치를 열마다 특정값으로 대체
+values = 1차원 시리즈나 딕셔너리
+df.fillna(value=values, limit='대체할 값 갯수') # 결측치가 있을 경우 대체, limit로 대체할갯수 제한 가능
+결측치를 열평균으로 대체
+df.fillna(value=df.mean(axis=0))
+결측치를 열중위값으로 대체
+df.fillna(value=df.median(axis=0)
+최빈값으로 대체
+df.mode()
+            
+-drop 
+그룹별 평균값, 그룹별 중위수(apply함수적용)로 대체
+-dropna
+결측치가 있는 데이터 누락(행기준,열기준)
+ex)
+결측치가 하나라도 있는 행을 제거. inplace=True가 아니면 return
+df.dropna() 
+특정열들에 결측치가 하나라도 있으면 제거
+df.dropna(subset=['특정열1', '특정열2'])
+모든 열이 결측치인 행만 삭제(기본값 axis=0)
+df.dropna(how='all')
+하나라도 결측치가 있는 열 삭제
+df.dropna(axis=1)
+모든 행이 결측치인 열 삭제
+df.dropna(how='all',axis=1)
+
+replace( to_value, new_value, inplace=T/F)
+to_value를 new_value로 변경
+to_value에 정규표현식을 이용 가능
+
+## 12.3 mask(조건), where(조건)
+- where(조건) : 조건이 True인 요소만 출력, 그 외는 결측치로 출력
+- mask(조건) : 조건이 False인 요소만 출력, 그 외는 결측치로 출력
+
+
+
+시리즈(1차원 데이터)
+슬라이싱, 인덱스 배열로 추출하고 데이터의 추가나 삭제 가능
+s.sort_index() # index정렬
+s.sort_values() # 값기준 오름정렬 (내림차순정렬 : ascending=False)
+s.to_frame(name='생성될 행이름') #시리즈를 데이터프레임으로 변환
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
