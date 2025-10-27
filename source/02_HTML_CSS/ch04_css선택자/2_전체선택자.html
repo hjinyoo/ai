@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style> /* 위부터 아래로 차례차례 적용 */
+       * { /*전체선택자=페이지 초기화 용도 : 전체 페이지의 디자인을 초기화*/
+           margin:0;
+           padding:0;
+           color:saddlebrown;
+       }
+       header, nav, section, footer{
+           border:1px solid gray;
+           width:500px;
+           margin:2px auto; /*좌우여백을 반으로 나눔*/
+       }
+       /* ul li 메뉴를 수평으로 */
+       nav ul { overflow:hidden; } /* 수평으로 하고픈 태그의 부모단 */
+        nav ul li {
+            float: left;
+            list-style: none;
+            width:125px;
+            text-align:center; /*글씨 가운데로 */
+            /*margin:1px 25px;*/
+        }
+        section {
+            clear:both /* float속성을 clear . overflow:hidden을 했으면 생략 가능 */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>00 주식회사</h1>
+    </header>
+    <nav>
+        <ul>
+            <li>회사소개</li><li>서비스소개</li><li>고객센터</li><li>공지사항</li>
+        </ul>
+    </nav>
+    <section>
+        <p>
+            css선택자란,
+            웹페이지의 특정부분을 선택하여 태그의 속성을 변경하는 목적 이용
+        </p>
+        <p>
+            제3항의 승인을 얻지 못한 때에는 그 처분 또는 명령은 그때부터 효력을 상실한다. 이 경우 그 명령에 의하여 개정 또는 폐지되었던 법률은 그 명령이 승인을 얻지 못한 때부터 당연히 효력을 회복한다.
+            민주평화통일자문회의의 조직·직무범위 기타 필요한 사항은 법률로 정한다. 지방의회의 조직·권한·의원선거와 지방자치단체의 장의 선임방법 기타 지방자치단체의 조직과 운영에 관한 사항은 법률로 정한다.
+        </p>
+    </section>
+    <footer>
+        <p>서울시 xx구 00동 ㅁㅁ빌딩 xF</p>
+    </footer>
+</body>
+</html>
