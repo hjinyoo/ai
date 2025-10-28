@@ -1,0 +1,368 @@
+데이터프레임과 시리즈(pandas)
+-pip install pandas
+
+판다스 패키지
+-데이터 분석을 위해 반드시 알아야 할 패키지. 넘파이를 기반으로 하며, 다른 많은 라이브러리와 잘 통합되도록 설계
+-2차원 구조를 갖는 데이터프레임, 1차원 구조를 갖는 시리즈를 제공
+
+판다스 장점 : 데이터프레임생성, 파일io, 레이블링, 부분데이터 추출, 크기변경(행이나 열 삽입, 삭제), 데이터 분할, 병합, 데이터구조변경, 결측치 처리
+
+데이터프레임 만들기
+-딕셔너리 리스트를 이용해서 데이터프레임 만들기
+d = [{'col1':..., 'col':...}, {'col1':..., 'col2':...}]
+df = pd.DataFrame(data=d)
+df
+-리스트를 이용해서 데이터프레임 만들기
+col1 = [...]
+col2 = [...]
+df = pd.DataFrame({'col1':col1, 'col2':col2})
+df
+판다스 디스플레이 옵션
+pd.options.display.max_columns = 지정값 # 기본값 20, 임의로 지정 가능
+pd.options.display.max_rows = 지정값    #  기본값 60, 임의로 지정가능
+
+read_csv
+1.csv 파일 불러오기(기본값)
+ex)
+a= pd.read_csv('data/파일명.csv',
+                     #, encoding='utf-8', sep=',', comment주석처리x
+                    )
+
+형변환 : astype('int64'), astype('datetime64' )
+문자형로 읽어들인 Birth를 datetime형으로
+ex)
+int64에서 int16으로 변환
+a['Age'] = a['Age'].astype(np.int16)
+문자형로 읽어들인 Birth를 datetime형으로 변환
+a['Birth'] = pd.to_datetime(member['Birth']) 
+
+2.특정행을 제외하고 csv 파일 읽어오기
+skiprows 사용
+ex)
+a= pd.read_csv('data/파일명.csv',
+                     encoding='cp949',
+                     skiprows=[n,m]) # n,m번째 행 제외하고 읽어오기(시작은 1부터)
+a
+
+3. 상위몇행만 sep문자는 ,아닌 csv파일 읽어오기
+ex)
+a = pd.read_csv('data/ch11_membersep.csv', 
+                     nrows=5, # 상위 5행만
+                     sep='|')
+a
+
+4.주석(#)제외, datetime형 필드를 지정하여 csv 파일 읽어오기
+ex)
+a = pd.read_csv('data/파일명..csv',
+                     sep='\t',              # 구분자 설정
+                     comment='#',           # 주석제외
+                     parse_dates=['datetime열이름']) # datetime64형으로 읽어올 필드지정
+a
+
+
+패키지에서  iris 데이터 가져오기
+iris 가져오기 방법1 : sklearn(머신러닝 패키지)
+iris 가져오기 방법2 : statsmodels (R데이터)
+iris 가져오기 방법3 : seaborn(시각화패키지)
+
+iris 방법1 : sklearn
+sklearn.datasets 모듈 데이터(iris)를 데이터 프레임으로 변환
+from sklearn import datasets #머신러닝을 공부하기 위한 학습 데이터셋 제공
+# sklearn 패키지에서 제공되는 데이터셋은 딕셔너리형식으로 제공
+iris = datasets.load_iris()
+print(type(iris)) # Bunch타입(딕셔너리를 상속받은 타입) 딕셔너리처럼 동작
+# print(iris.DESCR) # iris 데이터셋의 설명
+# 독립변수
+data = iris.data
+# 종속변수
+target = iris.target_names[iris.target]
+
+iris 방법2 : statsmodels
+from statsmodels.api import datasets
+iris_dataset = datasets.get_rdataset('iris',
+                                     package='datasets',
+                                     cache=True) # 한번 다운로드한 데이터를 pc에 저장
+# 열이름에 .이 있으면 접근불가
+ 
+iris 방법3 : seaborn
+
+import seaborn as sns
+iris = sns.load_dataset('iris')
+iris.head(1)
+-데이터프레임을 파일로 출력(4k)
+
+
+이름(열, 행) 지정하기
+
+열이름 지정하기
+변수명.columns=['열이름1','열이름2',...]
+
+행이름 지정
+변수명.index = ['행이름1','행이름2',...]
+
+-인덱스를 컬럼으로 편입시키기
+변수명.reset_index(inplace=True)
+
+-기존 index를 새로운 열에 편입시키지 않고 제거한 후, 새로운 숫자 index로 초기화
+변수명 = 변수명.reset_index(drop=True)
+
+datetime열에서 날짜 및 시간에 관련된 정보를 추출 : 시리즈.dt
+ex)
+변수명['datetime열이름'].dt.year
+
+레벨이름 지정하기
+ex) columns
+변수명.columns = [['분류1','분류1','분류1','분류2','분류2'],
+                 ['col1','col2','col3','col4','col5']]
+변수명.columns.names = ['대분류','소분류']
+변수명
+
+ex) index
+변수명.index = [['index1','index2','index3','index4','index5'],
+                ['레벨index1','레벨index2','레벨index3','레벨index4','레벨index5']]
+변수명.index.names = ['레벨1','레벨2']
+변수명
+
+부분데이터 조회
+변수명['조회할 칼럼이름']
+변수명.조회할 칼럼이름
+
+행이름,열순번으로 [ ]로 조회할 경우 에러
+떨어져 있는 여러 열 조회 가능
+-변수명[['칼럼1','칼럼2']]
+
+
+loc을 이용한 조회
+df.loc[행이름, 열이름] : 행이름, 열이름으로 조회
+행이름과 열이름자리에 슬라이싱 from:to : from부터 to까지(to 포함)
+행이름과 열이름자리에 리스트
+ex)
+변수명.loc[0:2]
+변수명.loc[0:2,]
+변수명.loc[0:2, :] 
+변수명.loc[0:2, ...] # 모든열을 다 출력할 경우 열 생략가능
+ 숫자로 슬라이싱한 자리에 행이름,열이름으로 넣고 출력가능
+ 
+iloc을 이용한 조회
+df.iloc[행순번, 열순번] : 행이름, 열이름으로 조회
+행순번과 열순번자리에 슬라이싱 from:to:by : from부터 to 앞까지 by씩 (to 미포함)
+행순번과 열순번자리에 리스트
+loc과 다르게 이름으로 불가하고 순번으로만 조회가능
+변수명.iloc[0] 조회가능
+
+조건으로 조회하기
+
+변수명['찾을열이름']=='조회할 내용'
+변수명.loc[변수명['찾을열이름']]=='조회할 내용'
+ex)
+변수명.loc[변수명['찾을열이름']]=='조회할 내용', ['조회할 내용의 다른 정보1':'조회할 내용의 다른 정보2']]
+
+특정 단어로 시작하는 데이터 조회
+변수명['찾을열이름'].str.startswith('특정단어')
+
+특정 단어를 포함하는 데이터 조회
+변수명['찾을열이름'].str.find('특정단어')!=-1
+변수명[변수명['찾을열이름'].str.contains('특정단어')]
+
+시리즈.isin([])
+조회할 내용1 이거나 조회할 내용2 인 데이터
+변수명.loc[변수명['찾을열이름'].isin(['조회할 내용1','조회할 내용2 '])]
+변수명[변수명['찾을열이름'].isin(['조회할 내용1','조회할 내용2 '])]
+
+datetime별 조건으로 ㅈ회
+ex)2000년 이전 데이터
+변수명[변수명r['datetime인 열'].dt.year < 2000]
+
+조건 연산자를 이용해서 추출(조건2개)
+ex)
+import numpy as np
+import pandas as pd
+data = pd.DataFrame({'eng':[np.nan, 80, np.nan, 85],
+                     'kor':[100, 80, 60, np.nan]})
+display(data)
+# 영어 80이상이고 국어 80이상인 데이터 추출
+data[(data['eng']>=80) & (data['kor']>=80)]
+
+# 결측치 확인 방법1
+data.info()
+# 결측치 확인 방법2
+data.isna() # 결측치 여부
+data.isna().sum() # 각 열의 결측치 갯수
+
+데이터 삭제 및 추가
+
+데이터프레임의 요소삭제
+df.drop(삭제할열이름이나 행이름,axis)
+axis=0일때는 행삭제, axis=1일때는 열삭제
+-단일 행 삭제
+df.drop('삭제할행이름') # axis=0(기본값) : 해당 행 삭제 
+삭제한 결과를 df 적용 
+(1)할당 df = df.drop('삭제할행이름', axis=0)
+(2)df.drop('삭제할행이름', axis=0, inplace=True)
+-복수 행 삭제
+df.drop(['삭제할행이름1','삭제할행이름2','삭제할행이름3'])
+-열 삭제
+df.drop(['삭제할열이름1', '삭제할열이름2'], axis=1)
+
+
+데이터프레임의 요소 추가
+-열 추가
+df['추가할 열이름'] = '추가할 내용'
+df
+-리스트를 이용한 열 추가
+df['추가할 열이름'] = [추가할 내용1,추가할 내용2,추가할 내용3,추가할 내용4,추가할 내용5]  # 행수 일치시켜야함
+df
+-추가할 열에 결측치를 할당 후 원하는 데이터
+df['추가할 열이름'] = np.nan
+df.iloc[슬라이싱, -1] = 원하는 데이터
+df
+-딕셔너리로 행 추가
+new_df = pd.DataFrame([
+    {'추가할 행'}
+  ])
+pd.concat( [df, new_df] ).reset_index(drop=True) # 두 데이터 프레임 연결
+df
+
+
+병합과 연결
+-merge()를 이용한 데이터프레임 병합
+양쪽이 다 일치하는 데이터만 병합
+df1.merge(df2) # how='inner' 기본값: 내부조인
+df1.merge(df2, how='left') # 왼쪽의 df1 데이터는 모두 남기고 오른쪽 df2가 매칭되도록
+df1.merge(df2, how='right') # 오른쪽의 df2 데이터는 모두 남기고 왼쪽 df1가 매칭되도록
+df1.merge(df2, how='outer') # 양쪽 df1, df2 데이터 모두 남김
+df1.merge(df2, left_on='df의열1', right_on='열2', how='inner')
+
+-concat()을 이용한 데이터프레임 연결
+pd.concat( [df1, df2, df3..], axis)
+axis=0 (기본값) : 위아래로 연결
+axis=1 : 좌우로 연결
+pd.concat([df1, df2], axis=1) # 좌우 연결
+pd.concat([df1, df2]).reset_index(drop=True)
+
+
+-정렬(행이름, 열이름, 값에 의한 정렬)
+#ascending=True 오름차순(기본값) / ascending=False(내림차순)
+df.sort_index(axis) : 행 또 열이름으로 정렬
+df.sort_index(axis=0, inplace=True) # axis="rows"
+
+df.sort_values(by=[정렬기준이될 열이름], ascending=T/F, inplace=T/F) : 특정 열 값에 의한 정렬
+df = df.sort_index(axis=1) # axis='columns'
+
+
+-값에 의한 정렬
+df.sort_values(by='정렬기준행이름') # 정렬기준행으로 오름차순 정렬(ascending=True)
+col1기준으로 내림차순, col1같으면 col2 기준 오름차순 정렬
+df.sort_values(by=['col1', 'col2'], ascending=[False, True])
+
+
+기초 통계 분석
+ 판다스:기초통계(데이터 요약)
+ statmodels:난이도 있는 통계
+
+count : NaN을 제외한 데이터 수
+min : 최소값
+iris.min() # 열별 최소값(axis=0)
+max : 최댓값
+iris.median(axis=0, numeric_only=True) # iris에서 숫자필드만 중위수 계산
+sum : 합
+cumsum : 누적합
+cumprod : 누적곱
+mean : 평균
+X = iris.loc[:, 'sepal_length':'petal_width']
+X = iris.iloc[:, :-1]
+X.mean(axis='rows') # 열별평균 == 행들의평균(axis=0 이나 axis='rows')
+X.mean(axis=1)
+X.mean(axis='columns') #행별평균 == 행을 고정하고, 열들의평균
+
+median : 중위값
+
+std : 표준편차
+
+var : 분산
+
+quantile : 분위수(0사분사위수=최소값, 1사분위수, 2사분위수(중위값), 3사분위수, 4사분위수=최대값)
+이상치 구하는 용도 : Q1-1.5IQR ~ Q3 + 1.5IQR 이외의 데이터는 이상치
+ex)
+import pandas as pd
+df = pd.DataFrame(data=[1, 3, 4, 7, 10], columns=['value'])
+# interpolation='nearest' : 정확한 구간의 값이 없을 경우 가까운 값
+df['value'].quantile(q=[0, 0.3, 0.55, 0.8, 1], interpolation='nearest'
+df가 q의 가장 가까운 값으로 환산
+# interpolation='midpoint' : 정확한 구간의 값이 없을 경우 환산해서 출력
+df['value'].quantile(q=[0,0.3,0.55,0.8,1], interpolation='midpoint')
+
+qunt=X.quantile(q=[0, 0.25, 0.5, 0.75, 1], interpolation='nearest')
+for idx, col in enumerate(qunt.columns):
+    min = qunt.iloc[0, idx]
+    Q1 = qunt.iloc[1,idx]
+    Q3 = qunt.iloc[3,idx]
+    max = qunt.iloc[4, idx]
+    iqr = Q3 - Q1
+    lower_outlier = Q1 - 1.5*iqr # 하한이상치 limit
+    upper_outlier = Q3 + 1.5*iqr # 상한이상치 limit
+
+describe : 요약 통계량
+describe()
+1) 기본 요약 통계량
+-iris.describe() # 기본값 : 숫자열에서의 요약통계량
+-iris['species'].describe()
+ iris.species.describe() # 문자열에서의 요약통계량 : 데이터갯수, 종류(unique), 최빈데이터(top), 최빈데이터갯수(freq)
+2) describe()의 include와 exclude 매개변수
+-include 매개변수를 통해서 요약통계량을 출력할 타입 지정
+df.describe(include=['float64','bool','object'])
+-모든 타입의 열의 요약 통계량 출력
+df.describe(include='all') 
+-exclude 매개변수를 이용해서 기본통계량 출력에서 제외할 타입 지정
+df.describe(exclude=['float64'])
+-특정 컬럼의 고유값들의 종류
+df['특정칼럼'].unique() 
+-고유값들의 빈도
+df['특정칼럼'].value_counts()
+
+공분산 : (x1-x1평균)*(x2-x2평균)들의 합을 n-1로 나눈값
+X.cov()
+
+corr : 상관관계(계수)
+# -1 <= 상관계수(공분/(x1의 표준편차*x2의 표준편차)) <= 1
+X.corr()
+
+rolling(n).mean() : n개씩 평균 출력 - 데이터변동이 많을 때 추세(패턴)를 부드럽게 보고 싶을 때
+ex)
+iris['sepal_length'].rolling(5).mean()[4:30] # 인접한 5개의 평균
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

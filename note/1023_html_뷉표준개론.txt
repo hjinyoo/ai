@@ -1,0 +1,25 @@
+웹표준 개론
+HTML
+Hyper Text Markup Language의 약자로서 웹문서를 기술하는 언어
+웹문서를 표현하기 위해 태그들로 구성
+CSS
+Cascading Style Sheets의 약자로, HTML문서를 디자인적으로 예쁘게 만들어 정보 전달을 좀더 효율적으로 하기 위해 만들어진 문서
+
+HTML은 정보를 가지고 있고, CSS는 화면상의 레이아웃등의 디자인을 컨트롤하는 문서 
+JavaScript
+동작을 담당
+<head>내에서 링크를 이용해 분리 해서 파일을 만들어 사용 가능
+<link href="파일명.css" rel="stylesheet" type="text/css" />
+<script src="파일명.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
