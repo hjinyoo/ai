@@ -1,67 +1,63 @@
 body {
         *{margin:0; padding:0;}
         a {
-            color: purple;
             text-decoration: none;
-            font-weight:bold;
-            text-align: center;
+            color: purple;
+            font-weight: bold;
             display: block;
         }
         li{list-style: none;}
         div{
-        border: 1px solid lightgray;
-        margin: 5px; padding: 5px;
-        text-align: center;
+            border: 1px solid lightgray;
+            margin: 5px; padding: 5px;
+            text-align: center;
         }
         #container{
             width:800px; margin: 0 auto;
         }
-        
-        #header,#footer{
-            height:100px; line-height: 100px;
-            background-color: yellow;
+        #header{
+        height: 100px; line-height: 100px;
+        background-color: yellow;
         }
         #nav p{ height: 40px; line-height: 40px;}
-        #header,#nav,#section,#footer{
-            width:785px; height: 150px;
-            box-sizing: border-box;
+        #nav ul {
+            width: 700px; margin: 0 auto;
+            overflow: hidden;
+        } 
+        #nav ul li{
+            float: left;
+            line-height: 50px;
+            background-color: pink;
+            margin: 2px;
+            width: 136px;
+        }
+        #nav ul li:first-child{
+        border-radius: 20px 0 0 20px;
+        }
+        #nav ul li:last-child{
+        border-radius: 0 20px 20px 0;
         }
         #section{
             overflow: hidden;
         }
-        #nav ul{
-            width:700px; margin: 0 auto;
-            overflow: hidden;
-        }
-        #content{
+        #section #content{
             float: left;
-            border: 1px solid gray;
-            margin: 6px;
-            width:490px; height: 297px;
+            width: 578px; 
+            height: 200px;
         }
-        #banner{
-            float: left;
-            border: 1px solid gray;
-            margin: 6px;
-            width:265px; height: 297px;
+        #section #banner{
+        float: left;
+        width: 154px;
+        height: 200px;  
         }
-        #header,#footer{
+        #footer{
+            height:100px; line-height: 100px;
             background-color: yellow;
-            line-height: 7;
         }
-        #nav > ul > li{
-            float: left;
-            line-height: 50px;
-            list-style: none;
-            background-color: pink;
-            text-align: center;
-            font-weight: bold;
-            text-decoration: purple;
+        #container{
+        position:relative;
         }
-        #nav li:first-child { 
-            border-radius: 20px 0 0 20px;
+        #background_image{
+        background:url('ch05/sulhyun.jpg') no-repeat;
+    
         }
-        #nav li:last-child { 
-            border-radius: 0 20px 20px 0;
-        }
-}
