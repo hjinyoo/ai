@@ -1,0 +1,6 @@
+/* .content 프린트용 */
+#wrap .content{
+    color: green;
+    padding: 10px;
+    font-size: 1.5em;
+}
