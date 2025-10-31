@@ -1,0 +1,38 @@
+CSS규칙
+CSS파일 분리 : CSS를 HTML 문서에서 분리하여 별도로 관리 가능
+@import 규칙 : CSS에서 ‘@’ 시작하는 키워드들이 규칙 
+                     @keyframe도 규칙
+link를 대신 가능
+<style>태그 내부 상단에 위치해야 한다
+<style>
+@import url();
+</style>
+
+
+
+@media 규칙 : link태그에 media속성을 이용하여 상황에 따른 CSS를 적용 가능
+미디어 종류 
+all : 모든 미디어 타입
+print : 인쇄 용도
+screen : 컴퓨터 스크린을 위한 용도
+screen용과 print용으로 분리 가능
+ex)
+<style>
+@media screen{
+#wrap .content {}
+}
+@media print{
+#wrap .content {}
+<style>
+
+반응형 웹 : 웹문서를 접근하는 것이 PC, 스마트폰, 테블릿 등 소형 디바이스 환경이 많아짐
+ PC 전용 문서가 많고 어디서 출력될 것인지 따라 고민해야함
+ex) 접근 디바이스별 사이즈로 구분하여 반응하게 웹 구성
+   <style>        
+        @media screen and (min-width:1201px){
+        }
+        @media screen and (min-width:900px) and (max-width:1200px) {
+                    }
+        @media screen and (max-width:899px) {
+                   }
+    </style>
