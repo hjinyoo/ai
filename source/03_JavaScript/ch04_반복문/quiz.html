@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
     <title></title>
     <script>
+    let cnt = 0 ; // 점수 입력 횟수
+    let right = 0; // 제대로된 숫자를 입력 횟수(0~100사이의 숫자)
+    let wrong = 0; // 제대로된 숫자를 입력하지 않은 횟수
+    let sum = 0; // 점수 누적
     // 반복문(조건 : confirm창에서 확인을 클릭)
     while(confirm('누적할래?')){
     // 1. prompt를 통해 점수 입력 받고 cnt++
