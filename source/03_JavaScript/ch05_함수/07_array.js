@@ -12,7 +12,7 @@ function array(){ // argueents(매개변수 배열) : 매개변수의 내용
     }else if(arguments.length>=2){
         // result를 arguments 내용의 배열로 : result.push(arguments[0~끝까지])
         // arguments.forEach()는 불가
-        for(data in arguments){
+        for(data of arguments){
             result.push(data);
         }
         // for(let idx=0 ; idx<arguments.length ; idx++){
