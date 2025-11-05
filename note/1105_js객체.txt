@@ -1,0 +1,32 @@
+객체
+객체의 속성과 메서드
+※ 배열 내부에 있는 값을 요소, 객체 내부에 있는 값은 속성
+자바 스크립트에서는 요소와 속성을 구분하지 않고 쓴다.  객체 속성 중 함수형 자료형인 속성을 특별히 메서드라고 부른다.
+※This 키워드 생략 불가
+
+객체와 반복문
+배열은 단순 for 반복문과 for in 반복문으로 요소에 쉽게 접근. 객체는 단순 for문은 불가. for in반복문을 사용
+
+객체의 속성 추가
+ 일반 for문, for-in, for-of, forEach() 이용하여 출력
+toString() 
+메서드 생성
+※화살표함수 사용 불가
+   변수명.toString = function () {
+            var output = '';
+               for (let key in this){
+                    if(key!=' ' && key!='toString'){
+                    output += key + ' : ' + this[key] + '<br>';
+                    }
+                }
+                return output;
+            }
+        };
+속성 제거 
+delete 이용
+
+객체와 배열을 사용한 데이터 관리
+일반 for문, for-in, for-of, forEach() 이용하여 출력
+
+함수를 사용한 객체 생성
+객체를 반환하는 일반함수를 선언하여 이용

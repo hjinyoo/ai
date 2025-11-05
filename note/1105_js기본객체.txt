@@ -1,0 +1,53 @@
+기본객체(내장객체, 표준내장객체)
+
+
+String : 문자열을 다루기 위한 객체
+Array : 배열을 만들어 주는 객체
+Date : 날짜와 시간을 처리하기 위한 객체
+Math : 수학 계산을 위한 객체
+
+String 내장함수
+length : 문자열의 길이
+concat : 끝에 추가
+substring(a,b) : a번재부터 b번째 앞까지 추출 str[a:b]역할
+substring(a) : a번재부터 끝까지 추출 str[a:]역할
+substr(a,b) : a번째부터 b글자 추출 
+indexOf(searchString) : 앞에서부터 일치하는 문자열의 위치 리턴 
+lastindexOf(searchString) : 뒤에서부터 일치하는 문자열의 위치 리턴 
+trim() : 앞뒤 space제거
+toUpperCase() : 문자열을 대문자로
+toLowerCase() : 문자열을 소문자로
+replace(regEXP, replacement) : 문자열의 첫번째 regEXP를 replacement로 변경 후 리턴
+replaceAll(regEXP, replacement) : 문자열의  regEXP를 replacement로 변경 후 리턴
+
+Array 내장함수
+Array() : 빈 배열
+Array(number) :  매개변수만큼의 크기를 가지는 배열 생성
+Array( , , , ) : 매개변수를 배열로 생성
+join() : 배열 안의 모든 요소를 문자열로 만들어 리턴
+pop() : 배열의 마지막 요소 삭제하고 리턴
+push(): 배열의 마지막에 요소 추가하여 리턴
+reverse() : 배열 순서를 거꾸로 리턴
+slice(a,b) : 배열 요소의 지정한 부분을 리턴( a번째부터 b번째 앞까지 추출
+sort()  : 배열의 요소르 정렬 (ascii 코드 순으로 오름차순 정렬)
+(left, right)를 이용한 예
+ex) 
+변수명.sort( (left, right)=>{
+            return right.getSum()-left.getSum(); //총점 기준 내림차순 정렬
+        });
+splice() : 배열 요소의 지정한 부분 삭제 후 삭제한 부분 리턴
+js에서의 깊은 복사
+from이용
+ex) originalArr = Array.from(arr1);
+
+Date 내장함수
+생성
+- 특정한 날짜를 생성하기 위해서는, Date의 매개변수에 숫자를 연, 월-1, 일, 시, 분, 초, 밀리초 순서로 입력해 객체를 생성
+
+Date 게터
+-getDate, getDay, getHours 등
+Date 세터
+-setDate, setHours, setTime 등
+Date객체의 toString메소드
+-toDateString, toLocaleDateString 등
+
