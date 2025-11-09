@@ -1,0 +1,38 @@
+브라우저 객체 모델
+브라우저 객체 모델(BOM, Browser Object Model)은 웹 브라우저와 관련된 객체의 집합을 의미
+
+window 객체
+window 객체는 많은 속성과 메서드가 있으므로 자주 사용되는 속성과 메서드만 이용
+window 객체는 브라우저 기반 자바 스크립트의 최상위 객체. 지금까지 함수처럼 사용한 alert(), prompt()함수 모두 window객체의 메서드
+Var 키워드로 선언한 일반 변수도 모두 window 객체의 속성
+
+window 객체의 open()메서드의 매개변수는 모두 옵션
+* open(속성1, 속성2, 속성3);
+         * 속성1 : 열릴 새창(child창)의 url
+         * 속성2 : 윈도우 이름
+         * 속성3 : width,height,left,top,location(주소창유무 1,0)*/
+URL : 열고자 하는 HTML 페이지의 URL
+name : 윈도우 간 통신하는데 사용하는 윈도우 이름 또는 target속성
+features : 윈도우 출력 모양을 지정하는 옵션
+
+※ Window open() 메서드는 새로운 window 객체를 생성하는 메서드. 단지 팝업창을 여는 것에서 끝나지 않고 윈도우 객체를 리턴. 새로운 윈도 객체에 접근해 속성과 메서드를 사용 가능
+
+
+window 객체의 기본 메소드
+window 객체는 자신의 형태와 위치를 변경할 수 있게 메서드를 제공
+OOby() 형태의 메서드는 현재 위도를 기준으로 상대적으로 속성을 변화하는 메서드며, OOTo()형태의 메서드는 절대적인 기준으로 속성을 변화
+
+location 객체
+브라우저의 주소 표시줄과 관련된 객체
+location 객체는 페이지를 이동할 때 많이 사용
+다음 네가지 방법으로 페이지를 이동할 수 있으나 assign() 메서드와 다르게 replace()메서드는 뒤로 가기 버튼을 사용할 수 없음
+location = ‘http://hanb.co.kr’;
+location.href = ‘http://hanb.co.kr’;
+location.assign(‘http://hanb.co.kr’);
+location.replace(‘http://hanb.co.kr’);
+
+history객체
+사용자의 브라우저 방문기록을 앞뒤로 이동하거나 조작 가능
+ex) history.back()
+     history.forward()
+

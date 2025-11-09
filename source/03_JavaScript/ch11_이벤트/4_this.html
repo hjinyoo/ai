@@ -9,6 +9,7 @@
             var header = document.getElementsByClassName('header');
             for(var idx in header){
                 header[idx].onclick = function(){
+                    // this : 이벤트가 발생된 엘리먼트
                     this.innerHTML = '클릭했네';
                     this.style.color = 'red';
                 }

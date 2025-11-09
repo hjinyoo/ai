@@ -11,34 +11,18 @@
         var overImg = ['ch11_img/0over.jpg', ' ch11_img/1over.jpg', ' ch11_img/2over.jpg', ' ch11_img/3over.jpg'];
         var outImg = [' ch11_img/0out.jpg', ' ch11_img/1out.jpg', ' ch11_img/2out.jpg', ' ch11_img/3out.jpg'];
         window.onload=() =>{
-            var Img = document.getElementsByTagName('Img');
-            for(var idx in Img){
-                Img[0].onmouseover = function(){
-                    this.src = overImg[0];
-                }
-                Img[0].onmouseout = function(){
-                    this.src = outImg[0];
-                }
-                Img[1].onmouseover = function(){
-                    this.src = overImg[1];
-                }
-                Img[1].onmouseout = function(){
-                    this.src = outImg[1];
-                }
-                Img[2].onmouseover = function(){
-                    this.src = overImg[2];
-                }
-                Img[2].onmouseout = function(){
-                    this.src = outImg[2];
-                }
-                Img[3].onmouseover = function(){
-                    this.src = overImg[3];
-                }
-                Img[3].onmouseout = function(){
-                    this.src = outImg[3];
-                }
-            }
+            let Img = document.getElementsByTagName('Img');
+            for(let idx in Img){ // var로 쓰면 이벤트발생시 idx값이 4
+        Img[idx].onmouseover = function(){
+          //this.src = overImg[i];
+            this.setAttribute('src', overImg[idx]);
         };
+        Img[idx].onmouseout = function(){
+            this.src = outImg[idx];
+          //this.setAttribute('src', outImg[i]);
+        };//이벤트
+      }; // for
+    };//window.onload
     </script>
     </head>
     <body>
