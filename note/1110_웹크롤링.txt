@@ -15,4 +15,4 @@ soup = BeautifulSoup(response.text나 response, 'html.parser')
 
 # 엘리먼트 추출하기
 select('선택자')     / select_one('선택자')
-find_all(태그,속성) / find(태그, 속성) oup(response.text나 
+find_all(태그,속성) / find(태그, 속성) 
