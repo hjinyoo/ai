@@ -1,0 +1,9 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+driver = webdriver.Chrome()
+driver.get("url")
+변수명 = driver.find_element(By.속성, '속성명')
+변수명.send_keys('검색할 내용')
+from selenium.webdriver.common.keys import Keys
+변수명.send_keys(Keys.RETURN) # Enter를 입력
