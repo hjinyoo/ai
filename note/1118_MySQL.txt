@@ -1,0 +1,71 @@
+MySQL 
+
+MySQL의 특징
+SQL에 기반을 둔 관계형 DBMS 중 하나
+리눅스, 유닉스, 윈도우 등 거의 모든 운영체제에서 사용가능
+처리 속도가 상당히 빠르고 대용량의 데이터 처리 용이
+
+
+MySQL의 시작
+C:\Program Files\MySQL\MySQL Server 8.0\bin에서 cmd실행하여 mysql –u계정 -p비밀번호 실행 : 관리자 계정 root로 접속 : mysql -uroot –pmysql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'mysql'; --root 계정의 인증방식 전환(8.x에서만)
+FLUSH PRIVILEGES;
+사용자 계정 생성 및 권한 부여
+EX)
+create user user01 identified by 'password'; -- 계정생성
+grant all privileges on *.* to user01; -- 권한부여
+drop user user01; -- 계정삭제
+revoke all on *.* from user01; -- 권한박탈
+
+데이터베이스
+존재하는 데이터베이스들 목록 보기 : show databases;
+새로운 데이터베이스 생성 명령 : create database 데이터베이스명;
+데이터베이스 삭제 명령 : Drop database 데이터베이스명;
+데이터베이스로 들어가기 : use 데이터베이스명
+내가 어디서 작업하는지 모를 때 select database();
+
+
+DDL
+테이블 생성
+MySQL타입 : numeric(n,d), varchar(n), date
+정수 : tinyint(1byte), smallint(2byte), mediumint(3byte)
+	  int/integer(4byte), bigint(8byte)
+실수 : float(n, d;4byte), double(n, d;8byte)
+문자 : char(n), text, mediumtext(16M), longtext(4GB)
+날짜 : date, datetime, time
+
+제약조건 
+Unique, primary key, not null, foreign key, check, 그외 제약조건은 아니나 default
+FK(외래키) 제약조건 아래에 기술해야 없는 참조 조건을 추가할 시 에러 안 남
+
+테이블 변경
+alter table 테이블명 add 필드명 타입;
+alter table 테이블명 modify 필드명 타입;
+alter table 테이블명 drop 필드명;
+테이블 삭제
+drop table table_name;
+
+
+DML (Query - Auto-Commit Transections체크되어 있으면 autocommit됨)
+select문 
+and 연산자는 && 또는 and
+
+컬럼함수 – 오라클 함수와 다소 다른 점
+ex)
+select concat(pname, '(',job, ')') from personal; -- 오라클은 2개까지만. ||은 OR의 의미 연결연산자X
+
+MySQL은 select절 가능
+-- date_format(날짜형, 포맷) : 날짜형을 문자로
+-- date_format(문자형, 포맷) : 문자형을 날짜형으로
+	-- %Y(년도 4자리) %y(년도 2자리), %m(월) %d(일 01, 02, .), %c(일1,2)
+    -- %h(시) %i(분) %s(초) %p(오전)
+
+select pname, pay, if(특정조건) from 테이블명; -- 논리함수 존재
+select 칼럼명,ifnull(칼럼명, 0) from 테이블명; --오라클의 NVL()역할
+	
+Join
+select 컬럼명, nickname1or2.공통컬럼명 from 테이블명1 nickname1 right outer join 테이블명2 nickname2 
+		on nickname1.공통컬럼명=nickname2.공통컬럼명;
+
+
+
