@@ -1,0 +1,109 @@
+SQLite 데이터 베이스 연결
+- SQLite 데이터 베이스는 별도의 DBMS 없이 SQL문 이용해서 DB액세스할 수 있도록 만든 간단한 디스크 기반 DB
+- C라이브러리
+- SQLite는 프로토타입 생성시 사용
+- 프로젝트 : 분석 -> 설계 -> 구현 -> 테스트 -> 고객에게 배포 -> 유지보수 프로토타입(SQLite) 완제품(Oracle, MySQL, Maria, ..)
+- DB browser for SQLite(https://sqlitebrowser.org/dl/)
+import sqlite3
+sqlite3.sqlite_version # 버전확인법
+
+cursor( ) : 커서 객체를 생성
+commit( ) : 현재 트랜잭션을 커밋(변경사항 적용
+rollback( ) : 마지막 호출 이후 데이터베이스에 대한 모든 변경 사항을 롤백(취소)
+close( ) : 데이터베이스 연결이 닫힙(commit()을 먼저 호출하지 않고 데이터베이스 연결을 닫으면변경 사항이 손실)
+execute(sql[,parameters]) : cursor() 메서드 를 호출하여 커서 객체를 생성하고 주어진 매개 변수로 커서의 execute() 메서드
+를 호출 한 다음 커서를 반환(SQL 문을 실행.SQL 문을 매개변수화)
+fetchone( )  : 쿼리 결과 집합의 다음 행을 가져 오거나, 단일 시퀀스를 반환하거나, 더 이상 데이터를 사용할 수 없는 경우 None을 가져옴
+fetchall( ) : 질의 결과의 모든(나머지) 행을 가져와 목록을 반환(사용할 수 있는 행이 없으면 빈 목록이 반환)
+close( ) : 커서를 닫음
+rowcount : sqlite3 모듈의 Cursor 클래스가 이 속성을 구현 하더라도 데이터베이스 엔진 자체의 지원은 "영향을 받는 행"/"선택된 행"으로
+결정되고 예를 들어 executemany() 문장에서 수정된 행의 수는 rowcount에 합해 짐
+
+데이터 베이스 연결
+(1) 데이터베이스 연결 생성
+DB 연결 : sqlite로 연결시 DB파일이 없으면 빈 DB파일 생성하고 연결, 있으면 연결
+sqlite3.connect('파일명.db')
+(2) SQL 전송 객체 생성(cursor 객체)
+sqlite3.connect('파일명.db').cursor()
+(3) SQL 전송 & 결과 받기(cursor.execute()이용)
+ select 전송 결과 : cursor가 가리킴
+ select문 실행 결과 : 
+        ## fetchall() : 결과를 모두 받을 때(튜플 list)
+        ## fetchone() : 결과를 한행씩 받을 때(튜플)
+        ## fetchmany(n) : 결과를 n행 받을 때(튜플 list)
+(4) cursor 해제 & 데이터베이스연결객체 해제
+close()
+
+
+SQL 구문에 파라미터 사용하기
+
+qmark 스타일
+SQL 구문의 매개변수를 포함해야 할 값에 물음표(?)로 표시한 후 튜플을 통해 물음표에 전
+달할 값을 지정(DB에 따라 불가한 경우 있음)
+ex)
+cur.execute("insert into people values (?, ?)", (who, age))
+named 스타일
+SQL 구문의 매개변수를 포함해야 할 값에 콜론(:)과 값을 받을 이름을 표시한 후 딕셔너리
+를 이용해 이름에 값을 전달
+ex)
+cur.execute("select * from people where name_last=:who and age=:age",
+{"who":who,"age":age})
+
+SQLite 데이터베이스에서 데이터 수정/삭제하기
+-SQL 구문을 실행할 때에는 커서 객체가 반드시 필요한 것은 아님
+-Connection 객체의 execute() 함수를 이용해서 SQL 구문을 실행시킬 수 있지만 표준은 아니므로 커
+서를 통해 SQL 구문을 실행시킬 것을 권장
+-INSERT, UPDATE, DELETE 구문의 경우 commit() 또는 rollback() 함수를 이용해 변경사항을 저장
+(commit) 또는 취소(rollback)시킬 수 있음
+
+오라클 데이터 베이스 연결
+오라클 데이터베이스에 연결하는 패키지
+pip install cx_oracle (oracle 11g까지)
+pip install oracledb (oracle 12부터)
+오라클 데이터베이스 등 상용 데이터베이스에 연결하기 위해서 import 하는 패키지 또는 모듈의 이름과 connect() 함수를 이용해 Connection 객체를 생성하는 것만 다름
+
+cx_Oracle 모듈 : makedsn 함수와 connect 함수를 이용해 데이터베이스 서버주소, 포트번호, SID, 사용자이름, 비밀번호 등을 설정
+cx_Oracle.connect("user", "password", "localhost:1521/xe")
+
+oracledb 모듈
+oracledb.connect(
+    user="scott",
+    password="tiger",
+    host="localhost",
+    port=1521,
+    sid="xe"
+)
+
+- host : 데이터베이스가 설치되어 있는 컴퓨터의 주소, 자신의 컴퓨터에 오라클 데이터베이스를 설치했다면 “localhost” 사용
+- port : 데이터베이스의 포트번호, 오라클은 주로 1521번 사용
+- sid : 데이터베이스 인스턴스의 고유 이름(System ID) 입니다. 오라클 Express Edition을 설치했다면 sid는 xe
+- user : 데이터베이스 사용자 아이디
+- password : 데이터베이스에 접속하기 위한 사용자의 비밀번호
+
+
+MySQL 데이터베이스 연결
+
+pip install mysql-connector-python (공식connector)
+pip install PyMySQL (경량)
+
+ex)
+import pymysql
+conn = pymysql.connect(
+    host = "localhost",
+    user="root",
+    password="mysql",
+    db="devdb",
+    charset="utf8mb4"
+)
+
+
+
+
+
+
+
+
+
+
+
+
