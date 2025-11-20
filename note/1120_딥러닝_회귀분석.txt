@@ -1,0 +1,60 @@
+회귀분석
+
+기존의 프로그램 방식
+회귀분석(linear regression) 설명 사이트 : https://gbhat.com/machine_learning/linear_regression.html
+오차함수 : MSE(오차제곱평균), RMSE(루트를 취하기 때문에 MSE의 단점이 어 느정도 해소. 이상치에 덜 민감), MAE(mean absolute erro error ; 절대값평균)
+
+딥러닝/머신러닝 프로그램방식
+1. 데이터 확보 및 생성
+numpy를 이용한 정수형 변수 정의
+input data=독립변수
+target data=종속변수
+
+2. 데이터 전처리 : 스케일 조정(컴퓨터에게 학습시키기 위해 정규화/표준화 : 전체의 편차를 비슷하게), 훈련데이터(학습데이터셋), 검증데이터셋, 시험데이터셋
+
+3. 모델구성
+from tensorflow.keras.models import Sequential - 모델 생성
+from tensorflow.keras.layers import Input, Dense - 입력값과 출력값으로 layer층 지정
+model = Sequential() - 모델 생성 선언
+model.add(Input(shape=(n,))) - 입력(독립)변수의 shape
+model.add(Dense(n)) - 타겟(종속, 출력)변수의 갯수
+print(model.summary()) - 모델의 결과를 상세하게 요약하여 출력(회귀분석결과의 통계적 유의성과 모델 적합도를 심층적으로 분석할떄 사용)
+
+4. 모델 학습 과정 설정
+ex)
+model.compile(loss='mse', optimizer='rmsprop', metrics=['mae'])
+loss - 손실함수  optimizer - 옵티마이저  metrics - 평가지표
+학습전 예측하기
+ex)
+model.predict(np.array([[n],[n]]))
+학습전 모델 저장
+ex)
+model.save('저장할위치/파일명.h5')
+
+5. 모델 학습시키기(훈련, 검증데이터셋)
+ex)
+hist = model.fit(독립변수(훈련data), 타겟변수(훈련data), epochs=n, verbose=n)
+- epochs=n  학습횟수 지정 
+- verbose=0:출력없음 / 1: 기본값 출력 / 2: 에포크별 자세한 로그 출력
+
+6. 모델 평가(시험데이터셋)
+ex)
+hist.history.keys() - 키 확인
+7. 모델 저장/사용(입력값이 주어지면 예측값을 받기)
+ex)
+model.predict(np.array([[n],[n],[n]])) - 예상하기
+model.save('저장할위치/파일명.h5')
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,65 @@
+딥러닝 : 데이터의 규칙성을 추출
+응용분야 : 글씨인식, 문장분류, 예측, 질병진단, 얼굴인식
+
+ML/DL의 종류
+    * 지도학습(독립=입력변수, 타겟=종속변수)
+        * 분류분석(타겟변수가 category 변수인 분석. 다중분류vs이진분류)
+    * 비지도학습(입력변수)
+        * 군집화
+    * 강화학습
+
+지도학습에서의 딥러닝 프로그램 방식
+    1. 데이터 확보 및 생성/  2. 데이터 전처리 : 스케일 조정, 훈련데이터(학습데이터셋), 검증데이터셋, 시험데이터셋, 원핫인코딩
+	학습/평가 데이터 분리하여 선언
+	One-Hot Encoding (원-핫 인코딩):
+       딥러닝 분류 모델에 사용하기 위해, 목표 변수(data)를 One-Hot Encoding 방식으로 변환하여 사용
+       pd.get_dummies 함수를 사용하거나, to_categorical을 사용하여 변환
+       변환 결과는 각 클래스에 해당하는 열에 1이 표시된 형태([0, 1, 0, 0, 0] 등)로 나타남
+	레이블 인코딩 (Label Encoding):
+	문자열 카테고리 데이터를 숫자(정수)로 변환하는 레이블 인코딩
+	from sklearn.preprocessing import LabelEncoder를 사용하여 LabelEncoder 객체를 만들고, fit_transform을 통해 문자열 데이터를 숫자로 변환
+    
+    3. 모델구성
+	fmodel = Sequential(): 순차적인(sequential) 모델을 생성
+	model.add(Input(shape=(n,))) - 입력층입력 피처가 n차원 데이터
+        여러개의 은닉층으로 구성함
+        은닉층 순서대로 생성
+	활성화 함수 : relu, elu, tanh, sigmoid
+	model.add(Dense(n, activation='sigmoid')) - n개의 뉴런을 사용하며 첫 번째 은닉층은 활성화 함수로 sigmoid를 사용
+	model.add(Dense(n, activation=활성회함수) - n개의 뉴런을 사용하며 활성화 함수 사용
+	........
+	model.add(Dense(n, activation='softmax')): 출력층으로, 18개의 뉴런을 사용하며 활성화 함수로 softmax를  이 모델이 n-1개의 클래스를 분류하는 문제에 사용되고 있음을 의미
+	model.summary() - 모델의 구조와 파라미터 개수를 요약하여 출력
+    
+    4. 모델 학습 과정 설정
+	회귀분석에서의 loss : mse, rmse, mae
+        다중 분류분석에서의 loss : categorical_crossentropy
+	ex)
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    5. 모델 학습시키기(훈련, 검증데이터셋)
+	hist = model.fit(입력변수, 타겟변수, epochs=학습횟수, batch_size=n,
+                 validation_data=(입력변수, 타겟변수), verbose=n)
+    -batch_size : n개의 모델 샘플을 보고 한번 가중치 업데이트
+    -verbose=0:출력없음 / 1: 기본값 출력 / 2: 에포크별 자세한 로그 출력
+    
+    6. 모델 평가(시험데이터셋) : 모델 학습과정 살펴보고 evaluate
+	테스트데이터셋으로 모델 학습과정의 loss, metrics
+	변수명 = model.evaluate(x입력변수, 타겟변수, batch_size=n)
+	print('key :', 변수명[0])
+	print('key :', 변수명[1])
+    7. 모델 저장/사용(입력값이 주어지면 예측값을 받기)
+	model.predict(np.array([n])).argmax() - 모델의 n번째 내용 예측
+	model.predict(np.array([n]))를 변수 선언하여 변수명[0,변수명.argmax()]*100 하면 몇 %의 확률로 예측하는지 확인 가능
+	model.save('저장할위치/파일명.h5')
+	변수명 = load_model(저장된위치/파일명.h5')
+
+
+
+
+
+
+
+
+
+
+
