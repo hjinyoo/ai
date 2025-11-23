@@ -1,0 +1,99 @@
+비지도 학습 군집화
+주어진 데이터들의 특징을 바탕으로 유사성이 높은 데이터들끼리 묶어 군집으로 나누는 과정(컴퓨터가 자체의 구조를 파악하고 알아서 비슷한 것끼리 모으는 작업)
+
+군집화의 원리 
+n개의 그룹으로 나누고 찾아가는 반복과정으로 이루어짐
+
+1. 초기 중심점 설정
+데이터 생성 후 군집개수를 정하고 각 군집을 대표하는 초기 중심점을 임의로 설정
+
+2. 데이터 할당
+거리계산
+군집화 수행을 위해 각 데이터 포인트와 중심점 사이의 거리를 계산
+ex)
+def dist(a, b):
+    return np.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
+모든  데이터 포인트를 설정된 중심점에 따라 그룹으로 분류
+
+4. 군집화 (for문 이용/api(sklearn)를 이용한 군집화)
+데이터 할당이 끝난 후 각 그룹의 위치를 대표하는 중심점을 새롭게 조정
+
+for문 이용
+ex) 
+for i in range(n,n):
+    # 랜덤포인트 2지점 기준으로 group0과 group1 나눔
+    group0 = []
+    group1 = []
+    for d in data:
+        if dist(d, points[0]) < dist(d, points[1]):
+            group0.append(d)
+        else:
+            group1.append(d)
+ # group0의 중간점, group1의 중간점으로 points 업데이트
+    group0_mean_X = np.mean([d[0] for d in group0])
+    group0_mean_Y = np.mean([d[1] for d in group0])
+    points[0] = group0_mean_X,group0_mean_Y
+    group1_mean_X = np.mean([d[0] for d in group1])
+    group1_mean_Y = np.mean([d[1] for d in group1])
+    points[1] = group1_mean_X,group1_mean_Y
+
+# 기준점 이동 : group0의 중심점(기준점0), group1의 중심점(기준점1)
+group0_meanX =np.mean([d[0] for d in group0])
+group0_meanY =np.mean([d[1] for d in group0])
+random_points[0] = [group0_meanX,group0_meanY]
+
+group1_meanX =np.mean([d[0] for d in group1])
+group1_meanY =np.mean([d[1] for d in group1])
+random_points[1] = [group1_meanX,group0_meanY]
+random_points
+
+# group0과 group1, 기준점0, 기준점1
+plt.plot([d[0] for d in group0],
+         [d[1] for d in group0], 'o', color='r')
+plt.plot(random_points[0][0],
+         random_points[0][1], 'x', color='r', markersize=30)
+plt.plot([d[0] for d in group1],
+         [d[1] for d in group1], 'o', color='b')
+plt.plot(random_points[1][0],
+         random_points[1][1], 'x', color='b', markersize=30)
+
+api(sklearn)를 이용
+sklearn : 머신러닝 패키지
+예측모델 : 분류, 회귀, 군집분석 - fit(학습), predict(예측)
+변환모델 : 전처리시 사용 ex. 인코딩, 스케일 조정 - fit(학습), transform(변환함수), fit_transform(학습->변환)
+ex)
+from sklearn.cluster import KMeans
+data = np.array(data)
+model = KMeans(n_clusters=n,  # n개 그룹으로 군집
+               init='random', # 초기 기준점을 random하게
+               n_init=n,     # n번 실행
+               random_state=n) # random 결과를 일괄적으로 맞추기 위한 seed
+model.fit(data)
+
+# 기준점(중심점)
+model.cluster_centers_
+
+# 나눠진 그룹들의 인덱스
+model.labels_
+group0 = data[model.labels_==0]
+group1 = data[model.labels_==1]
+# 시각화
+plt.plot([d[0] for d in group0],
+         [d[1] for d in group0], 'o')
+plt.plot([d[0] for d in group1],
+         [d[1] for d in group1], 'o')
+plt.plot([d[0] for d in data[::2]],
+         [d[1] for d in data[::2]], 'x',markersize=10)
+4. 반복
+위 두 단계를 반복하면 중심점은 데이터가 밀집된 곳으로 이동하고 더 안정적이고 명확해짐
+중심점의 위치가 더 이상 크게 변하지 않으면 수렴했다고 판단
+
+
+
+
+
+
+
+
+
+
