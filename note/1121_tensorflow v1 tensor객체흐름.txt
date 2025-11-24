@@ -103,10 +103,35 @@ standardization(표준화) : 데이터의 평균을 0, 표준편차를 1로 조�
   standardization = ────────  * 라이브러리 추천(sklearn.preprocessing.StandardScaler)
                              Xstd(표준편차)
 
+XOR
+가장 기본적인 비선형 분류
+특징: 입력 x1과 x2가 서로 다를 때만 출력되고 y=1이 되어 직선 하나로 나누어 0과 1을 정확하게 분류하는 것은 불가능해서 단일 레이어로는 해결 북가 
 
+Deep Learning을 이용한 XOR
+비선형 변환을 수행할 수 있는 하나 이상의 hidden layer가 팔요하고 이것이 딥러닝의 기본 구조이다
 
+ex)
+# layer1 : 입력2 -> 출력 10인 W & b
+W1 = tf.Variable(tf.random_normal([2,10]))
+b1 = tf.Variable(tf.random_normal([10]))
+layer1 = tf.nn.relu(tf.matmul(X,W1) + b1)
 
+# layer2 : 입력10 -> 출력 20인 W & b
+W2 = tf.Variable(tf.random_normal([10,20]))
+b2 = tf.Variable(tf.random_normal([20]))
+layer2 = tf.nn.relu(tf.matmul(layer1,W2) + b2)
 
+# layer3 : 입력20 -> 출력 10인 W & b
+W3 = tf.Variable(tf.random_normal([20,10]))
+b3 = tf.Variable(tf.random_normal([10]))
+layer3 = tf.nn.relu(tf.matmul(layer2,W3) + b3)
+
+# layer4 : 입력10 -> 출력 1인 W & b
+W4 = tf.Variable(tf.random_normal([10,1]))
+b4 = tf.Variable(tf.random_normal([1]))
+# Hypothesis
+logits = tf.matmul(layer3, W4) + b4
+H = tf.sigmoid(logits)
 
 
 

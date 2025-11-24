@@ -1,0 +1,13 @@
+tensorflow v2를 이용해서 XOR을 학습
+v1과 달리 tensorflow의 keras를 이용해서 은닉층을 hidden layer가 dkslfk Dense 함수로 구현
+ex)
+model.add(Dense(units=10, # 출력 갯수
+                input_dim=2, # = input_shape = (2,) # 입력갯수
+                activation='relu')) # 활성화 함수
+model.add(Dense(units=20, activation='relu')) # 은닉층에서는 input_shape 사용안한
+model.add(Dense(10, activation='relu'))
+model.add(Dense(units=1, activation='sigmoid'))
+
+# loss : mae(회귀분석), binary_crossentropy(이진분류=로지스틱회귀분석),
+            # categorical_crossentropy(다중분류-원핫인코딩을 한 경우)
+            # sparse_categorical_crossentropy(다중분류-원핫인코딩을 안 한 경우)
