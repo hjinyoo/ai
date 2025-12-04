@@ -1,0 +1,5 @@
+RNN기반의Seq2Seq(스마트번역기)
+- Google Neural Machine Translation(GNMT)
+- RNN기반의 Sequence to Sequence 방식
+- 인코더(입력) / 디코더(모범출력) 연결구조
+- 응용분야:자연어

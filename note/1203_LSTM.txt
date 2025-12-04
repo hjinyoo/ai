@@ -1,0 +1,19 @@
+LSTM
+순환신경망(RNN)의 한 종류로 시퀀스 데이터를 처리하는데 효과적이며 기존 RNN의 장기 의존성 문제(Long-Term-Dependency Problem)과 기울기 소실 문제를 해결하기 위해 고안
+
+하이퍼파라미터 설정
+하이퍼파라이터를 바꾸면 모델의 정확도나 속도에 차이남
+ex)
+MY_WORDS = 1000 # imdb 데이터 안의 단어 수
+MY_LENGTH = 200   # 독립변수 차원(영화평 평균 길이 정도)
+MY_EMBED  = 32   # Embedding 결과 차원
+MY_HIDDEN = 64   # LSTM의 units 수
+
+MY_EPOCH = 15   # fit 반복학습수
+MY_BATCH = 200 # 배치사이즈(fit할 때, 매번 가져오는 데이터 수)
+
+# 불용어 설정(빈도수가 높은 상위 1~50은 대부분 the, a, is...)
+SKIP_TOP = n
+
+문자단어 -> 정수
+imdb.get_word_index() # 단어(word):정수(id) (빈도가 높은 단어는 앞)
