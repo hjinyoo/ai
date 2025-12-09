@@ -1,0 +1,113 @@
+Ollama_LLM활용의 기본 개념(LangChain)
+
+1. LLM을 활용하여 답변 생성하기
+1) Ollama를 이용한 로컬 LLM 이용
+성능은 GPT, CLaude 같은 모델보다 떨어지나, 개념설명을 위해 open source 모델 사용
+
+ollama.com 다운로드 -> 설치 -> 모델 pull
+cmd창이나 powershell 창에 ollama pull deepseek-r1:1.5b https://docs.langchain.com/oss/python/integrations/chat/ollama
+ex)
+from langchain_ollama import ChatOllama
+lim = ChatOllama(model="deepseek-r1:1.5b")
+result = lim.invoke("What is the capital of korea?")
+result
+
+모델 pull
+cmd창이나 powershell창(window키+R에서 powershell)에서 ollama pull llama3.2:1b
+ex)
+from langchain_ollama import ChatOllama
+llm = ChatOllama(model='llama3.2:1b')
+result = llm.invoke("What is the capital of korea?")
+result
+
+
+
+
+2) openAI 활용
+pip install langchain-openai
+https://auth.openai.com/log-in
+
+from dotenv import load_dotenv
+import os
+load_dotenv()
+# os.getenv("OPENAI_API_KEY")
+ex)
+from langchain_openai import ChatOpenAI
+llm = ChatOpenAI(model="모델명",
+                 # api_key=os.getenv("OPENAI_API_KEY")
+                )
+result = llm.invoke("What is the capital of korea? Return the name of the city only.")
+result
+
+# Azure : OPENAI_API_VERSION 키값
+# from langchain_openai import AzureChatOpenAI
+# llm = AzureChatOpenAI(model="gpt-5-nano")
+
+
+2. 랭체인 스타일로 프롬프트 작성
+프롬프트 : llm호출시 쓰는 질문
+
+1) 기본 프롬프트 템플릿 사용
+PromptTemplate을 사용하여 변수가 포함된 템플릿을 작성하면 PromptValue
+ex)
+from langchain_core.prompts import PromptTemplate
+llm = ChatOllama(model='llama3.2:1b')
+prompt_template = PromptTemplate(
+    template="What is the capital of {country}?", # {}안의 값을 새로운 값으로 대입 가능
+    input_variables = ["country"]
+)
+# country = input('어느 나라의 수도를 알고 싶으신가요?')
+prompt = prompt_template.invoke({"country":"korea"})
+
+2) 메세지 기반 프롬프트 작성
+BaseMessage 리스트
+BaseMessage 상속받은 클래스 : AIMessage, HumanMessage, SystemMessage, ToolMessage
+vscode에서 ctrl+shift+p : python:select interpreter입력 -> python 환경 선택
+vscode에서 커널 선택
+
+
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+변수명 = [
+    SystemMessage(content="페르소나 부여할 내용"), 
+    HumanMessage(content="모범 질문"), 
+    AIMessage(content="모범 답안"),    
+    HumanMessage(content="모범 질문"), 
+    AIMessage(content="모범 답안"),   
+    HumanMessage(content="질문")
+]
+llm.invoke(변수명)
+
+3) ChatPromptTemplate 사용
+BaseMessage리스트->튜플리스트
+
+# 위의 BaseMessage리스트를 수정
+# PromptTemplate : 프롬프트에 변수 포함
+# ChatPromptTemplate : SystemPrompt설정(페르소나), few shot설정, 변수포함
+from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
+chatPrompt_template = ChatPromptTemplate.from_messages([
+    ("system", "페르소나 부여할 내용"),
+    ("human", "모범 질문"), # 모범 질문
+    ("ai", "모범 질문"),    # 모범 답안
+    ("human", "모범 질문?"), # 모범 질문
+    ("ai", "모범 질문"),    # 모범 답안
+    ("human", "질문 {...}?")
+])
+country = input("어느 나라 수도가 궁금하세요")
+prompt = chatPrompt_template.invoke({"country": country})
+# print("프롬프트 : ", prompt, type(prompt))
+result = llm.invoke(prompt)
+result.content
+
+
+
+
+
+
+
+
+
+
+
+
+
+

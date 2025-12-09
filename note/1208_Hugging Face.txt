@@ -122,15 +122,16 @@ pip install sacremoses : 한영번역에서의 경고를 줄이고, 번역품질
 
 9. 이미지를 설명하는 텍스트 생성
 "image-to-text" : 그림을 설명
-"image-classification" : 이미지 분류
-
 객체명 = pipeline(task="image-to-text",
                      model="ydshieh/vit-gpt2-coco-en")
 url = "이미지 url주소"
 객체명(url, max_new_tokens=n) # 최대 n토큰으로 이미지에 대해 설명하는 text
 
-
-
+10. 이미지 분류
+"image-classification" : 이미지 분류
+변수명1 = Image.open('이미지파일 주소')
+변수명2 = pipeline(task="image-classification")
+변수명2(변수명1)
 
 
 
