@@ -80,23 +80,7 @@ llm.invoke(변수명)
 3) ChatPromptTemplate 사용
 BaseMessage리스트->튜플리스트
 
-# 위의 BaseMessage리스트를 수정
-# PromptTemplate : 프롬프트에 변수 포함
-# ChatPromptTemplate : SystemPrompt설정(페르소나), few shot설정, 변수포함
-from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
-chatPrompt_template = ChatPromptTemplate.from_messages([
-    ("system", "페르소나 부여할 내용"),
-    ("human", "모범 질문"), # 모범 질문
-    ("ai", "모범 질문"),    # 모범 답안
-    ("human", "모범 질문?"), # 모범 질문
-    ("ai", "모범 질문"),    # 모범 답안
-    ("human", "질문 {...}?")
-])
-country = input("어느 나라 수도가 궁금하세요")
-prompt = chatPrompt_template.invoke({"country": country})
-# print("프롬프트 : ", prompt, type(prompt))
-result = llm.invoke(prompt)
-result.content
+
 
 
 

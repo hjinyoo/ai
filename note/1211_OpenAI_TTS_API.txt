@@ -1,0 +1,106 @@
+OpenAI API를 활용한 텍스트-음성 변환 (TTS) 튜토리얼 (2025년 3월 기준)
+
+1. 환경 설정: OpenAI API 키를 안전하게 저장하고 로드하는 방법 (python-dotenv 활용)
+Python 코드에서 python-dotenv로 .env 파일을 불러온 뒤, openai.OpenAI() 클래스를 이용해 API 클라이언트 인스턴스를 생성. 이때 API 키는 명시적으로 전달하거나 환경 변수 OPENAI_API_KEY가 설정. 환경 변수 또는 인자로 API 키를 지정하지 않으면 OpenAI 라이브러리는 다음과 같은 오류를 발생
+
+OpenAIError: The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable
+
+2. 기본 TTS 변환: 간단한 텍스트를 음성으로 변환
+OpenAI의 TTS API는 입력 텍스트를 받아 사람이 말하는 것 같은 음성 오디오 데이터를 반환
+기본적으로 tts-1이라는 모델을 사용하며, 음성의 종류(voice)를 선택 가능
+ex1)
+text = "Hello, OpenAI! This is a text to speech test."
+with client.audio.speech.with_streaming_response.create(
+    model="tts-1", 
+    voice="nova",
+    input=text
+) as response:
+    response.stream_to_file('data/ch05_output.mp3')
+ex2)
+text = "Hello, OpenAI! This is a text to speech test."
+response = client.audio.speech.create(
+    model="tts-1", 
+    voice="nova",
+    input=text
+)
+위 코드에서는 openai_client.audio.speech.create(...) 메소드를 호출하여 TTS 요청
+주요 파라미터:
+- model="tts-1": OpenAI의 기본 TTS 모델을 지정.
+합니다.
+- voice="nova": 출력 음성의 목소리를 지정
+OpenAI TTS에는 여러 프리셋 목소리가 있음
+- input=text: 변환할 텍스트 문자열을 입력으로 전달
+
+create 메소드를 호출하면 OpenAI API에 요청을 보내고, 음성 오디오 데이터를 응답
+response 객체에는 이진 형식의 오디오 데이터가 포함
+
+이 response로부터 실제 오디오 바이너리 데이터를 추출하려면 response.content 속성을 사용
+
+3. 고급 기능 활용: 음성 모델 선택, 음성 목소리(voice) 변경, 언어 지원 및 속도 조절 등 추가 기능
+OpenAI의 TTS API는 기본 기능 외에도 다양한 옵션을 제공
+
+- 다양한 목소리(voice) 선택: 남성/여성 및 톤이 다른 여러 프리셋 음성을 사용가능
+- 모델 선택: 기본 모델 tts-1 외에 고품질 모델 tts-1-hd 사용법
+- 다국어 지원: 영어 이외의 언어로도 TTS가 가능 (한국어, 스페인어 등)
+- 음성 속도 조절: speed 파라미터로 발음 속도를 빠르게 또는 느리게 조절
+
+3.1 여러 가지 음성 목소리 선택하기
+OpenAI TTS에는 다양한 **프리셋 목소리(voice)**가 준비되어 있어 텍스트를 여러 스타일의 음성으로 들을 수 있음
+Alloy – (예상: 남성적이고 부드러운 음색)
+Echo – (맑고 청아한 톤)
+Fable – (동화 구연 같은 따뜻한 톤)
+Nova – (친근한 여성 음색으로 추정)
+Onyx – (깊고 진중한 남성 음색)
+Shimmer – (밝고 생동감 있는 여성 음색)
+각 목소리는 영어를 기반으로 최적화되어 있지만, 다국어 텍스트도 발음
+원하는 분위기나 성별 느낌에 따라 위 이름들 중 선택
+사용 방법은 간단히 voice 파라미터에 해당 이름 문자열을 지정
+
+3.2 TTS 모델 선택: 실시간 vs 고품질
+OpenAI는 현재 두 가지 TTS 모델 tts-1과 tts-1-hd를 제공
+기본 모델 tts-1은 응답 속도가 빠른 것이 장점이고, tts-1-hd 모델은 보다 고품질의 음성을 생성하지만 응답이 약간 느림. 응답 속도와 음질 간의 트레이드오프가 있으므로, 용도에 맞게 선택.
+실시간 상호작용이 중요하면 tts-1을, 음성 품질이 최우선이라면 tts-1-hd를 쓰는 식
+
+3.3 다국어 텍스트 변환하기
+Whisper 모델의 언어 지원을 기반으로 다양한 언어의 텍스트를 발음할 수 있음
+
+3.4 발음 속도 조절하기
+TTS API는 발음 속도를 조절할 수 있는 옵션을 제공
+speed 값을 0.25배에서 4배까지 조절할 수 있으며, 기본값은 1.0 (보통 속도)
+speed=1.0 : 기본 속도 (보통 사람 말하기 속도)
+speed<1.0 : 느린 발음 (예: 0.5는 절반 속도)
+speed>1.0 : 빠른 발음 (예: 2.0은 두 배 속도로 빨리 말함)
+
+
+4. 오디오 파일 저장 및 재생: TTS API로부터 받은 음성 데이터는 메모리 상에서 바이너리 데이터(bytes) 형태로 존재
+이 데이터를 파일로 저장하면 일반적인 오디오 플레이어로 재생할 수 있는 파일(예: MP3)을 얻을 수 있고, Jupyter Notebook에서는 해당 파일을 불러와 오디오 위젯으로 재생 가능
+
+4.1 오디오 데이터 파일로 저장하기
+OpenAI의 TTS 응답은 기본적으로 MP3 포맷의 오디오 데이터를 반환(응답 형식을 지정하지 않은 경우). 
+따라서 단순히 바이너리를 .mp3 확장자의 파일로 저장
+
+파일 저장은 일반적인 파일 쓰기 방식과 동일
+with open("파일경로", "wb") as f:로 바이너리 쓰기 모드("wb")로 파일을 열고, f.write(오디오데이터)로 내용을 기록합니다. 이렇게 하면 현재 디렉토리에 output_fast.mp3라는 파일이 생성되고, 변환된 음성이 그 안에 저장
+OpenAI Python 라이브러리는 편의를 위해 스트리밍 저장 함수도 제공
+response_fast와 같은 응답 객체는 stream_to_file("경로")라는 메소드를 갖고 있어서 한 줄로 바로 파일 저장 가능
+예를 들어 response_fast.stream_to_file("output_fast.mp3")라고 하면 같은 결과
+이 방법은 내부적으로 데이터를 조금씩 쓰는 스트림 방식을 사용하여 메모리 효율성을 높임
+
+참고: OpenAI TTS API는 기본 mp3 외에도 원하면 다른 오디오 포맷으로 가능.
+ response_format 파라미터에 "wav", "aac", "flac" 등 지원되는 포맷을 지정하면 해당 형식으로 반환
+예를 들어 openai_client.audio.speech.create(..., response_format="wav")로 요청하면 response.content가 WAV 포맷의 데이터로 구성
+일반적인 사용에서는 mp3로 충분하겠지만, 필요에 따라 포맷을 선택
+
+4.2 Jupyter Notebook에서 오디오 재생하기
+Jupyter Notebook에서는 IPython.display 모듈의 Audio 클래스를 이용하면 노트북 상에서 직접 오디오를 들을 수 있음. 
+
+만약 메모리의 데이터로 바로 재생하고 싶다면, Audio(data=audio_bytes, rate=...) 형태로도 가능
+그러나 TTS의 결과는 이미 압축된 오디오 파일 형태이므로, filename을 통해 재생하는 편이 간편
+
+
+
+
+
+
+
+
