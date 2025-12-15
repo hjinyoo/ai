@@ -1,0 +1,128 @@
+머신러닝 시작하기
+
+1절 머신러닝 개요
+
+insight : 탐색적 자료분석(EDA) : Pandas&Numpy, Matplotlib&Seaborn
+optimization : sckit-learn(머신러닝 패키지) statmodel, scipy.stats, tensorflow(딥러닝)
+
+머신러닝
+학습을 통해 측정된 작업 성능을 향상
+- 지도학습(감독학습) - Decision tree, Random forest, Logistics Regression, SVM, KNN
+- 비지도학습(자율학습) - K-means(군집분석), PCA(주성분 분석), ...
+
+2절 데이터 탐색
+
+2.1 변수의 종류
+- 데이터의 속성에 따라 명목식(남,여), 순서식(상중하, 서열이 있는 categorical), 구간식(간격척도, 순서의 간격의미), 비율식(연속형, 영점 존재)으로 데이터 구분
+- 변수의 타입에 따라 연속형, 이산형, 범주형 데이터로 구분
+- 데이터 품질에 따라 특이값(이상치), 결측값
+
+2.2 통계 요약 :
+- 중심위치 측도(평균, 중앙값, 최빈값)
+- 산포 측도(왜도, 첨도)
+
+import numpy as np
+# np.random.normal(loc=평균, scale=표준편차, size=데이터수)
+
+평균 :  np.mean(data)
+중위수 : np.median(data)
+분산 : np.var(data)
+표준편차 : np.std(data)
+
+from scipy.stats import kurtosis, skew # 첨도와 왜도
+왜도 :  skew(data) # 음수면 왼쪽으로 긴꼬리 데이터(오른쪽으로 치우친 데이터)
+첨도 :' kurtosis(data) # 0이면 정규분포보다 뾰족
+
+2.3 기초통계량
+describe()함수
+수치형 데이터 : 최소값, 최대값, 사분위수, 평균, 표준편차, ...
+범주형 데이터 : unique()갯수, 최빈 데이터, 최빈 데이터 빈도
+
+2.4 데이터 EDA 가속화
+pip install dataprep
+
+dataprep.eda의 모듈 주요함수
+
+plot() : 각 변수의 분포를 막대그래프, 파이그래프, 산점도로 표시, 요약 통계
+plot_correlation() : 변수들 사이의 상관계수를 히트맵으로 표시
+plot_missing() : 결측치 분포를 확인할 수 있도록 표시
+plot_diff([df1, df2], x="컬럼이름") : 두 데이터프레임의 특정 컬럼의 상세 비교
+
+2.5 상관분석
+- 두 변수간 선형적 관계가 있는지 분석
+
+공분산과 상관계수
+- 공분산 : 각 변수의 평균간 거리의 평균(단위에 의존). 두 변수가 같은 방향으로 변하는지
+- 상관계수 : 공분산을 표준편차로 나눔 : -1 ~ 1
+Pearson correlation coefficient(피어슨 상관계수)
+	* 두 변수가 모두 연속형일 때, 두 변수간 선형적 상관관계의 크기를 나타낸 값
+	* -1 ~ 1 사이(-1:반비례, 1:비례)
+	* 일반적으로 0.6이상이면 양의 강한 상관관계, -0.6이하면 음의 강한 상관관계
+ex)
+import seaborn as sns
+iris = sns.load_dataset('iris')
+iris.corr(numeric_only=True, method='pearson') # method='pearson'가 기본값
+from scipy.stats import pearsonr
+corr, p_value = pearsonr(iris.petal_width, iris.petal_length)
+corr, p_value
+
+Spearman correlation coeffience(스피어만 상관계수)
+- 데이터가 서열(순위) 데이터인 경우
+- 두 연속형 데이터가 심하게 정규분포를 벗어난 경우
+ex)
+iris.corr(numeric_only=True, method='spearman')
+
+2.6 독립성 검정
+두 변수간 상호작용을 통계적으로 유의한지 검증. 두 변수가 서로 영향을 주지 않고 독립적인지 검정
+
+2.6.1 피서의 검정
+- 데이터 수가 작을 때
+
+from scipy.stats import fisher_exact
+ratio, p_value = fisher_exact(data)
+ratio, p_value
+# p_value가 5% 이하인지
+# ratio == 1 : 그 컬럼간 발생 비율 같다(독립적)
+# ratio > 1 : 그룹1이 사건 발생 가능성이 높다
+# ratio < 1 : 그룹2이 사건 발생 가능성이 높다
+
+2.6.2 맥니마 검정
+맥니마 검정은 치료효과를 대조군과 비교하기 위해 의학 널리 사용
+
+3절. 데이터 전처리
+- 데이터 스케일 조정, 인코딩, 원핫인코딩, 결측치 처리, 데이터 분할(학습/테스트)
+- 데이터 처리 과정은 전 프로젝트의 약 60% 정도(오타 정정, 단어 통일, 고유명사 정리, 수치 데이터 단위 통일)
+- 전체 AI프로젝트 과정 : 데이터 수집 - 데이터 전처리 - 모델 구축(ml/dl) - 모델 성능 평가(A/R/P/F1/ROC) - 서비스 제작 - 배포 및 유지보수
+- 데이터 품질이 좋으면 전처리 시간 단축, 좋은 모델 구축, 모델 구축 시간 단축
+
+3.1 데이터 스케일 조정
+1) fit(x)
+2) transform(x)
+3) fit_transform(x)
+4) inverse_transeform(x) - Normalizer는 없음
+
+3.2 인코딩
+레이블 인코딩 : 실제값과 상관없이 0~k-1 사이의 정수로 반환
+
+원핫인코딩
+sklearn.preprocessing.OneHotEncoder : 2차원 정수 데이터를 원핫인코딩하는 encoder
+sklearn.preprocessing.LabelBinerizer : 1,2차원 정수나 문자 데이터
+tensor.keras.utils.to_categorical() : 1차원 정수 데이터
+pd.get_dummies() : 1차원 정수나 문자 데이터
+
+평균값 인코딩
+레이블 값을 수치적으로 구분할 수 있는 값으로 대체
+이렇게 인코딩한 값은 예측값과 수치적인 면에서 연관성 있음
+과적합(오버피팅) 문제가 발생할 수 있음
+
+3.3 결측치 처리
+pd.fillna() : 결과가 데이터프레임. 대체값이 평균, 중앙값, 특정한 값, ffill(이전값), bfill(다음값)
+sklearn.impute.SimpleImputer() : 결과가 numpy배열. 대체값 평균, 중앙값, 최빈값
+
+
+4절 데이터 분리
+학습용데이터 vs 테스트용 데이터 셋
+머신러닝 모형이 얼마만큼 신뢰도가 있는지 확인하기 위해서 학습한 이후 실제값과 예측값을 비교
+
+
+
