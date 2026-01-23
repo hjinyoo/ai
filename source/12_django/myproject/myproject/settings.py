@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "blog", # 앱등록
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -126,8 +127,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
+# 개발환경
 
-STATIC_URL = "static/"
+STATIC_URL = "static/" # 앱폴더 밑의 static
+STATICFIELDES_DIRS = [
+    os.path.join(BASE_DIR, 'myproject', 'static')
+]
+# 배포 후 운영환경(2월)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
