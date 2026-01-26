@@ -21,5 +21,6 @@ from django.shortcuts import redirect
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", lambda request : redirect("blog:list")),
-    path("blog/", include("blog.urls"))
+    path("blog/", include("blog.urls")),
+    path("book/", include("book.urls")),
 ]
