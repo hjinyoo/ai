@@ -17,3 +17,9 @@ class BookForm(forms.Form):
         if commit:
             book.save()
         return book
+    
+class BookModelForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'publisher', 'sales']
+        # fields = '__all__'
