@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "accounts",
     "book",
     "django.contrib.humanize", # intcomma(세자리마다,) 필터 사용
+    "article", # v1. GenericView이용(paging처리), v2.검색기능 v3.파일첨부(ch08)
 ]
 
 MIDDLEWARE = [
@@ -129,15 +130,27 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-# 개발환경
+'''
+Django 프로젝트가 실행 -> 설정이 셋팅(settings.py)
+1. Django.conf.global_settings.py 로드(모든 기본값)
+2. 사용자의 settins.py 로드(프로젝트별 존재)
+'''
 
+#  개발환경
 STATIC_URL = "static/" # 앱폴더 밑의 static
 STATICFIELDES_DIRS = [
     os.path.join(BASE_DIR, 'myproject', 'static')
 ]
-# 배포 후 운영환경(2월)
+# 배포 후 운영환경(2월) : 모든 static을 STATIC_ROOT로 옮기기 - python manage.py
+STATIC_ROOT = os.path.join(BASE_DIR, '_staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 업로드한 파일이 저장될 폴더와 액새스 url
+# /mrdia/a.png url로 접근 => _media/folder/a.png저장
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR,"_media")
+# myproject/urls.py에 MEDIA_URL와 ROOT연결
