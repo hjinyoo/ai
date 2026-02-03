@@ -35,8 +35,11 @@ SECRET_KEY = os.getenv("SECRET_KEY", "scretkey")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = ['192.168.0.52', '127.0.0.1']
+# "192.168.0.52,127.0.0.1" => ['192.168.0.52', '127.0.0.1']
+# python manage.py runserver 192.168.0.52:80로 서버 실행
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default="127.0.0.1").split(',')
+# print(ALLOWED_HOSTS)
 
 # Application definition
 
@@ -50,9 +53,9 @@ INSTALLED_APPS = [
     "blog", # 앱등록
     "accounts",
     "book",
-    "django.contrib.humanize", # intcomma(세자리마다,) 필터 사용
+    "django.contrib.humanize", # intcomma(세자리마다 ,) 필터 사용
     "article", # v1. GenericView이용(paging처리), v2.검색기능 v3.파일첨부(ch08)
-    "filetest"
+    "filetest",
 ]
 
 MIDDLEWARE = [
@@ -102,26 +105,27 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    # }, # 다른 개인정보와 유사한 비밀번호 사용 불가
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+        "OPTIONS": {"min_length":2}
+    }, # 최소 2자 이상 비밀번호
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    # }, # 통상적으로 자주사용되는 비밀번호 사용 불가
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    # }, # 숫자만 이루어진 비밀번호 사용 불가
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
-# LANGUAGE_CODE = "ko-kr" # 장고 admin 페이지 언어
+# LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-kr" # 장고 admin 페이지 언어
 # TIME_ZONE = "UTC"
 TIME_ZONE = "Asia/Seoul"
 USE_I18N = True
@@ -133,16 +137,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 '''
 Django 프로젝트가 실행 -> 설정이 셋팅(settings.py)
-1. Django.conf.global_settings.py 로드(모든 기본값)
-2. 사용자의 settins.py 로드(프로젝트별 존재)
+1. django.conf.global_settings.py 로드(모든 기본값)
+2. 사용자의 settings.py로드(프로젝트별 존재)
 '''
-
-#  개발환경
-STATIC_URL = "static/" # 앱폴더 밑의 static
-STATICFIELDES_DIRS = [
+# 개발 환경
+STATIC_URL = "/static/" # 앱폴더 밑의 static
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'myproject', 'static')
 ]
-# 배포 후 운영환경(2월) : 모든 static을 STATIC_ROOT로 옮기기 - python manage.py
+# 배포 후 운영환경(2월) : 모든 static을 STATIC_ROOT로 옮기기 - python manage.py collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, '_staticfiles')
 
 # Default primary key field type
@@ -150,8 +153,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, '_staticfiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# 업로드한 파일이 저장될 폴더와 액새스 url
-# /mrdia/a.png url로 접근 => _media/folder/a.png저장
+# 업로드한 파일이 저장될 폴더와 액세스 url
+# /media/folder/a.png url로 접근 => _media/folder/a.png저장
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR,"_media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "_media")
 # myproject/urls.py에 MEDIA_URL와 ROOT연결
